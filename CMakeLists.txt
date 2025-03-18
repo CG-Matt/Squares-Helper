@@ -7,13 +7,19 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 # Name the project
 project(SQUARESHELPER)
 
+# Use different source files depending on platform
+if(NOT WIN32)
+    set(PLATFORM_SOURCES "src/webAgent-unix.c")
+else()
+    set(PLATFORM_SOURCES "src/webAgent-win.c")
+endif()
+
 # List all source files
-set(SOURCES
+set(COMMON_SOURCES
     "src/CGMString.c"
     "src/fileManager.c"
     "src/hashSet.c"
     "src/multithreading.c"
-    "src/webAgent.c"
     "src/main.c"
 )
 
@@ -28,21 +34,31 @@ set(HEADERS
     "src/types.h"
 )
 
-# Include the libcurl library
-find_package(CURL REQUIRED)
+if(NOT WIN32)
+    # Include the libcurl library
+    find_package(CURL REQUIRED)
+endif()
 
 # Add the required files to the project
 add_executable(
     SQUARESHELPER
-    ${SOURCES}
+    ${COMMON_SOURCES}
+    ${PLATFORM_SOURCES}
     ${HEADERS}
 )
 
-# Link with libcurl
-target_link_libraries(SQUARESHELPER PRIVATE CURL::libcurl)
+if(NOT WIN32)
+    # Link with libcurl
+    target_link_libraries(SQUARESHELPER PRIVATE CURL::libcurl)
+else()
+    # Link with winhttp
+    target_link_libraries(SQUARESHELPER PRIVATE winhttp)
+endif()
 
 # Compile with all warkings and treat as errors
-target_compile_options(SQUARESHELPER PRIVATE -Wall -Wextra -Wpedantic -Werror)
+if(NOT WIN32)
+    target_compile_options(SQUARESHELPER PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
 
 # Change the executable name to squares-helper
 set_target_properties(SQUARESHELPER PROPERTIES OUTPUT_NAME "squares-helper")

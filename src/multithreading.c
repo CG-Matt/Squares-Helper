@@ -34,7 +34,7 @@ int website_check(void* arg)
     int ch;
 
     StringInit(&word, max_word_length);
-    strcpy(url, BASE_URL);
+    strcpy(url, URL_START URL_HOST URL_PATH);
 
     while(1)
     {
@@ -47,8 +47,8 @@ int website_check(void* arg)
         if(ch == EOF) break;
 
         // Construct URL from word and length
-        u8 s = sprintf(url + sizeof(BASE_URL) - 1, "%u", word.index);
-        url[sizeof(BASE_URL) - 1 + s] = '\0';
+        u8 s = sprintf(url + URL_BASE_LENGTH, "%u", word.index);
+        url[URL_BASE_LENGTH + s] = '\0';
         strcat(url, URL_MIDDLE);
         strcat(url, StringCStr(&word));
         strcat(url, URL_SUFFIX);
@@ -95,7 +95,7 @@ void ThreadsInit(u8 mwl)
     WebAgentGlobalInit();
 
     max_word_length = mwl;
-    url_buffer_length = sizeof(BASE_URL) - 1 + sizeof(URL_MIDDLE) - 1 + sizeof(URL_SUFFIX) - 1 + max_word_length + 2;
+    url_buffer_length = URL_BASE_LENGTH + sizeof(URL_MIDDLE) - 1 + sizeof(URL_SUFFIX) - 1 + max_word_length + 2;
 
     for(u16 i = 0; i < THREAD_COUNT; i++)
     {

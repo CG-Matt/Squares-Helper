@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <stdlib.h>
 #include <curl/curl.h>
 #include "webAgent.h"
@@ -29,7 +31,7 @@ WebAgent* WebAgentCreate()
     curl_easy_setopt(web_agent->handle, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(web_agent->handle, CURLOPT_USERAGENT, "Mozilla/5.0");
 
-    return web_agent;                               // All good, return the web agent
+    return web_agent;
 }
 
 void WebAgentCleanup(WebAgent* wa)
@@ -45,10 +47,10 @@ void WebAgentRequest(WebAgent* wa, const char* url)
     wa->err = curl_easy_perform((CURL*)wa->handle); // Perform web request
     if(wa->err != CURLE_OK)
         printf("CURL ERROR CODE: %i\n", wa->err);
-    if(wa->err == CURLE_URL_MALFORMAT)
-        printf("URL: %s\n", url);
     wa->err = wa->err != CURLE_OK;                  // Err will be 1 if error, 0 if successful
     if(wa->err) return;                             // Exit early if we had an error
 
     curl_easy_getinfo((CURL*)wa->handle, CURLINFO_RESPONSE_CODE, &wa->httpCode);
 }
+
+#endif

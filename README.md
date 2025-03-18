@@ -35,7 +35,13 @@ $ cmake ..
 ```
 
 ### Windows
-Support is not currently available.
+- Clone the repo. If you have git installed simply do
+```console
+$ git clone https://www.github.com/CG-Matt/squares-helper.git
+```
+- Open the folder with Visual Studio and let VS configure the build environment
+- Build the project
+- Move the compiled executable to the projects main directory
 
 ### MacOS
 Support is not currently available.

@@ -11,7 +11,10 @@
 
 // --- ADDITIONAL CONSTANTS - DO NOT EDIT ---
 
-#define BASE_URL                "https://wordfinder.yourdictionary.com/letter-words/"
+#define URL_START               "https://"
+#define URL_HOST                "wordfinder.yourdictionary.com"
+#define URL_PATH                "/letter-words/"
 #define URL_MIDDLE              "-starts-"
 #define URL_SUFFIX              "/?dictionary=WWF"
 #define FILTER_SCRIPT           "filter.py"
+#define URL_BASE_LENGTH         (sizeof(URL_START URL_HOST URL_PATH) - 1)
