@@ -33,7 +33,7 @@ int website_check(void* arg)
     char* url = malloc(sizeof(char) * url_buffer_length);
     int ch;
 
-    StringInit(&word, max_word_length);
+    StringInit(&word, max_word_length + 1);     // +1 for newline character
     strcpy(url, URL_START URL_HOST URL_PATH);
 
     while(1)
