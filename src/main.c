@@ -117,7 +117,6 @@ void generateWords()
         {
             for(u8 x = 0; x < 4; x++)
             {
-                // printf("Starting with letter: '%c', len=%u\n", input[y * 4 + x], len);
                 iterate(x, y, len);
                 visit_mask = 0;                 // Mark all locations as not visited
                 word.index = 0;                 // Clear output string
