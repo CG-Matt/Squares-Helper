@@ -49,7 +49,8 @@ DWORD WINAPI website_check(void* arg)
     char* url = malloc(sizeof(char) * url_buffer_length);
     int ch;
 
-    StringInit(&word, max_word_length + 1);     // +1 for newline character
+    StringInit(&word);
+    StringReserve(&word, max_word_length + 1);  // Reserve memory as to not resize
     strcpy(url, URL_START URL_HOST URL_PATH);
 
     while(1)
@@ -63,7 +64,7 @@ DWORD WINAPI website_check(void* arg)
         if(ch == EOF) break;
 
         // Construct URL from word and length
-        u8 s = sprintf(url + URL_BASE_LENGTH, "%u", word.index);
+        u8 s = sprintf(url + URL_BASE_LENGTH, "%zu", word.size);
         url[URL_BASE_LENGTH + s] = '\0';
         strcat(url, URL_MIDDLE);
         strcat(url, StringCStr(&word));
@@ -100,7 +101,7 @@ DWORD WINAPI website_check(void* arg)
 #endif
         }
 
-        word.index = 0;
+        StringClear(&word);
     }
 
     WebAgentCleanup(web_agent);

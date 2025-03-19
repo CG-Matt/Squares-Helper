@@ -6,7 +6,8 @@
 
 typedef struct {
     char* buffer;
-    u8 index;
+    usize size;
+    usize capacity;
 } String_t;
 
 // --- FUNCTIONS ---
@@ -14,7 +15,7 @@ typedef struct {
 /**
  * Initialise a string with the requested buffer size
  */
-void StringInit(String_t* str, u8 buffer_size);
+void StringInit(String_t* str);
 
 /**
  * Free the resources used by the string
@@ -32,3 +33,9 @@ char* StringCStr(String_t* str);
  * the internal buffer index.
  */
 void StringAppend(String_t* str, char c);
+
+void StringPop(String_t* str);
+
+void StringClear(String_t* str);
+
+void StringReserve(String_t* str, usize size);

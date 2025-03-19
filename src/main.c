@@ -73,7 +73,7 @@ void splitWords(FILE* src)
         if(ch == '\n')
         {
             ThreadsAddWord(StringCStr(&word));
-            word.index = 0;
+            StringClear(&word);
         }
         else
             StringAppend(&word, ch);
@@ -105,7 +105,7 @@ void iterate(u8 x, u8 y, u8 len)
     }
 
     CLEAR_BIT(visit_mask, y * 4 + x);
-    word.index--;
+    StringPop(&word);
 }
 
 void generateWords(void)
@@ -119,7 +119,7 @@ void generateWords(void)
             {
                 iterate(x, y, len);
                 visit_mask = 0;                 // Mark all locations as not visited
-                word.index = 0;                 // Clear output string
+                StringClear(&word);             // Clear output string
             }
         }
 
@@ -133,10 +133,9 @@ int main(void)
     readGrid(input, repeat_letters);            // Read and parse grid into input array
     readConfig(&max_word_length);               // Read in the config for the program
     
-    StringInit(&word, max_word_length);         // Initialise the global string buffer
+    StringInit(&word);                          // Initialise the global string buffer
     memset(repeat_letters, '\0', sizeof(repeat_letters));
     SetInit(&hash_set, 4096);
-
 
     raw_words = wopen("raw_words");             // Open raw words file
     generateWords();                            // Generate all words

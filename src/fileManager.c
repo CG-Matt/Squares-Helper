@@ -78,7 +78,7 @@ void readConfig(u8* mwl)
     *mwl = 0;
 
     String_t word;
-    StringInit(&word, 32);
+    StringInit(&word);
 
     void* dest;
     int c;
@@ -91,7 +91,7 @@ void readConfig(u8* mwl)
             {
                 dest = mwl;
             }
-            word.index = 0;
+            StringClear(&word);
             continue;
         }
         
@@ -101,7 +101,7 @@ void readConfig(u8* mwl)
             {
                 *(u8*)dest = (u8)atoi(StringCStr(&word));
             }
-            word.index = 0;
+            StringClear(&word);
         }
         
         if(isspace(c)) continue;    // Check if whitespace
