@@ -49,7 +49,7 @@ static_assert(THREAD_COUNT <= (u16)-1U, "THREAD_COUNT too large.");
 /**
  * Write the word in the string buffer to the raw words file.
  */
-void renderWord()
+void renderWord(void)
 {
     u64 hash = hashString(StringCStr(&word));       // Generate hahs for the word
     if(SetContains(&hash_set, hash)) return;        // If the hash already exists, return
