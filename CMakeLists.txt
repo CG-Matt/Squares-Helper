@@ -39,6 +39,9 @@ if(NOT WIN32)
     find_package(CURL REQUIRED)
 endif()
 
+# Set the output directory to the project directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 # Add the required files to the project
 add_executable(
     SQUARESHELPER

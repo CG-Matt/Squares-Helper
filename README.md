@@ -41,18 +41,11 @@ $ git clone https://www.github.com/CG-Matt/squares-helper.git
 ```
 - Open the folder with Visual Studio and let VS configure the build environment
 - Build the project
-- Move the compiled executable to the projects main directory
 
 ### MacOS
 Support is not currently available.
 
 ## Using the program
-For the program to function properly it must be ran from the project directory not the build directory.
-For example on linux you would run the program as so:
-```console
-$ ./build/squares-helper
-```
-
 To use the program, first fill in the `GRID` file with the letters from the squares grid you would like help with. They can be lowercase, uppercase, on one line, on two lines or four lines. The program does not care about line count, it only wants 16 characters.  
 You can also configure the max word length from the `settings.conf` file. This can speed up execution of the max word length is small for the day.
 
