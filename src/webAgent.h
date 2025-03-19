@@ -14,12 +14,12 @@ typedef struct {
  * Must be called once at the beginning of the program
  * before any other WebAgent functions are used
  */
-void WebAgentGlobalInit();
+void WebAgentGlobalInit(void);
 
 /**
  * Create a new web agent instance
  */
-WebAgent* WebAgentCreate();
+WebAgent* WebAgentCreate(void);
 
 /**
  * Clean up memory for web agent

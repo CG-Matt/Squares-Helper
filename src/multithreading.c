@@ -155,13 +155,13 @@ void ThreadsAddWord(const char* s)
     ti = (ti + 1) % THREAD_COUNT;
 }
 
-void ThreadsResetFiles()
+void ThreadsResetFiles(void)
 {
     for(u16 i = 0; i < THREAD_COUNT; i++)
         rewind(contexts[i].input);
 }
 
-void ThreadsBegin()
+void ThreadsBegin(void)
 {
     printf("Creating threads: ");
     for(u16 i = 0; i < THREAD_COUNT; i++)
@@ -180,7 +180,7 @@ void ThreadsBegin()
     printf("threads started sucessfully.\n");
 }
 
-void ThreadsJoin()
+void ThreadsJoin(void)
 {
     printf("Awaiting completion...\n");
 #ifndef _WIN32
@@ -194,7 +194,7 @@ void ThreadsJoin()
 
 void ThreadsSetOutFile(FILE* f){ outfile = f; }
 
-void ThreadsCleanup()
+void ThreadsCleanup(void)
 {
 #ifdef _WIN32
     CloseHandle(lock);

@@ -47,9 +47,9 @@ static const char* get_path(const char* url)
 /**
  * Does nothing on windows but needs to be here
  */
-void WebAgentGlobalInit(){}
+void WebAgentGlobalInit(void){}
 
-WebAgent* WebAgentCreate()
+WebAgent* WebAgentCreate(void)
 {
     WebAgent* web_agent = malloc(sizeof(WebAgent));     // Allocate memory for the web agent
     if(!web_agent) return NULL;                         // Return NULL if unable to malloc

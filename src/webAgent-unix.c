@@ -11,12 +11,12 @@ static size_t write_callback(void *ptr, size_t size, size_t nmemb, void *userdat
     return size * nmemb;
 }
 
-void WebAgentGlobalInit()
+void WebAgentGlobalInit(void)
 {
     curl_global_init(CURL_GLOBAL_ALL);
 }
 
-WebAgent* WebAgentCreate()
+WebAgent* WebAgentCreate(void)
 {
     WebAgent* web_agent = malloc(sizeof(WebAgent)); // Allocate memory for the web agent
     if(!web_agent) return NULL;                     // Return NULL if unable to malloc

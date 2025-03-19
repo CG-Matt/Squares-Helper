@@ -28,7 +28,7 @@ void ThreadsAddWord(const char* str);
  * Rewind the seek position to the beginning
  * of the files in all the threads.
  */
-void ThreadsResetFiles();
+void ThreadsResetFiles(void);
 
 /**
  * Set the output file for all the threads.
@@ -39,14 +39,14 @@ void ThreadsSetOutFile(FILE* file);
  * Start running all threads with the
  * previously provided function.
  */
-void ThreadsBegin();
+void ThreadsBegin(void);
 
 /**
  * Await for all threads to finish.
  */
-void ThreadsJoin();
+void ThreadsJoin(void);
 
 /**
  * Free all resources allocated during threads initialisation.
  */
-void ThreadsCleanup();
+void ThreadsCleanup(void);

@@ -108,7 +108,7 @@ void iterate(u8 x, u8 y, u8 len)
     word.index--;
 }
 
-void generateWords()
+void generateWords(void)
 {
     printf("Generating words: ");
     for(u8 len = 4; len <= max_word_length; len++)
