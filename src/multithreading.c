@@ -1,23 +1,39 @@
 #include <stdlib.h>
-#include <threads.h>
 #include "multithreading.h"
 #include "CGMString.h"
 #include "string.h"
 #include "config.h"
 #include "webAgent.h"
 
+// --- Platform dependent includes
+#ifndef _WIN32
+    #include <pthread.h>
+#else
+    #include <windows.h>
+#endif
+
 // --- LOCAL VARIABLES ---
 
 static ThreadContext contexts[THREAD_COUNT];
-static thrd_t threads[THREAD_COUNT];
-static mtx_t lock;
 static FILE* outfile;
 static u8 max_word_length;
 static usize url_buffer_length;
 
+#ifndef _WIN32
+static pthread_t threads[THREAD_COUNT];
+static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+#else
+static HANDLE threads[THREAD_COUNT];
+static HANDLE lock;
+#endif
+
 // --- THREAD FUNCTION ---
 
-int website_check(void* arg)
+#ifndef _WIN32
+void* website_check(void* arg)
+#else
+DWORD WINAPI website_check(void* arg)
+#endif
 {
     ThreadContext* context = arg;
     WebAgent* web_agent = WebAgentCreate();
@@ -69,11 +85,19 @@ int website_check(void* arg)
         
         if(web_agent->httpCode == 200)
         {
-            mtx_lock(&lock);
+#ifndef _WIN32
+            pthread_mutex_lock(&lock);
+#else
+            WaitForSingleObject(lock, INFINITE);
+#endif
             StringAppend(&word, '\n');
             fputs(StringCStr(&word), outfile);
             fflush(outfile);
-            mtx_unlock(&lock);
+#ifndef _WIN32
+            pthread_mutex_unlock(&lock);
+#else
+            ReleaseMutex(lock);
+#endif
         }
 
         word.index = 0;
@@ -108,15 +132,17 @@ void ThreadsInit(u8 mwl)
         contexts[i].thread_id = i;
     }
 
+#ifdef _WIN32
     // Initialise mutex
-    int success = mtx_init(&lock, mtx_plain);
+    lock = CreateMutex(NULL, FALSE, NULL);
 
-    if(success != thrd_success)
+    if(!lock)
     {
         fprintf(stderr, "Err: Could not initialise mutex: ");
         perror(NULL);
         exit(EXIT_FAILURE);
     }
+#endif
 
     printf("threads initialised.\n");
 }
@@ -139,15 +165,30 @@ void ThreadsBegin()
 {
     printf("Creating threads: ");
     for(u16 i = 0; i < THREAD_COUNT; i++)
-        thrd_create(&threads[i], website_check, &contexts[i]);
+    {
+#ifndef _WIN32
+        pthread_create(&threads[i], NULL, website_check, &contexts[i]);
+#else
+        threads[i] = CreateThread(NULL, 0, website_check, &contexts[i], 0, NULL);
+        if(!threads[i])
+        {
+            fprintf(stderr, "Failed to create thread %hu.\n", i);
+            exit(EXIT_FAILURE);
+        }
+#endif
+    }
     printf("threads started sucessfully.\n");
 }
 
 void ThreadsJoin()
 {
     printf("Awaiting completion...\n");
+#ifndef _WIN32
     for(u16 i = 0; i < THREAD_COUNT; i++)
-        thrd_join(threads[i], NULL);
+        pthread_join(threads[i], NULL);
+#else
+    WaitForMultipleObjects(THREAD_COUNT, threads, TRUE, INFINITE);
+#endif
     printf("All threads finished.\n");
 }
 
@@ -155,8 +196,15 @@ void ThreadsSetOutFile(FILE* f){ outfile = f; }
 
 void ThreadsCleanup()
 {
-    mtx_destroy(&lock);
+#ifdef _WIN32
+    CloseHandle(lock);
+#endif
 
     for(u16 i = 0; i < THREAD_COUNT; i++)
+    {
+#ifdef _WIN32
+        CloseHandle(threads[i]);
+#endif
         fclose(contexts[i].input);
+    }
 }
